@@ -14,19 +14,24 @@ exports.render = function(o, cb){
 
   phantom.create(function(ph){
     ph.createPage(function(page){
-      page.set('paperSize', paperSize, function(){
-        page.set('zoomFactor', zoomFactor, function(){
-          page.set('viewportSize', {
-            width: width,
-            height: height
-          }, function(){
-            page.setContent(content);
-            page.set('onLoadFinished', function(){
-              page.render(output, {
-                format: format,
-                quality: quality
-              }, function(){
-                ph.exit();
+      page.set('localToRemoteUrlAccessEnabled', true, function(){
+        page.set('paperSize', paperSize, function(){
+          page.set('zoomFactor', zoomFactor, function(){
+            page.set('viewportSize', {
+              width: width,
+              height: height
+            }, function(){
+              page.setContent(content);
+              page.set('onResourceRequested', function(request) {
+                console.log('Request ' + JSON.stringify(request, undefined, 4));
+              });
+              page.set('onLoadFinished', function(){
+                page.render(output, {
+                  format: format,
+                  quality: quality
+                }, function(){
+                  ph.exit();
+                });
               });
             });
           });

@@ -1,5 +1,6 @@
 var renderer   = require('./renderer.js'),
-    Handlebars = require('handlebars'),
+    jade = require('jade'),
+    handlebars = require('handlebars'),
     fs         = require('fs');
 
 var template = process.argv[2],
@@ -19,7 +20,8 @@ fs.readFile(data, 'utf8', function(err, data){
 
 function readTemplate(url, values, cb){
   fs.readFile(url, 'utf8', function(err, source){
-    var template = Handlebars.compile(source);
+    var template = handlebars.compile(source, { pretty: true });
+    var html = template(values);
     cb(template(values));
   });
 }
