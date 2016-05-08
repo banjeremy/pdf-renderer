@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{title}}</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: url('http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/linedpaper.png');
+  }
+
+  h1 {
+    color: #666;
+    text-align: center;
+  }
+
+  .page {
+    width: 612px;
+    height: 771px;
+    overflow: hidden;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+</style>
+</head>
+
+<body>
+  <div class="page page-1">
+    <h1>{{title}}</h2>
+  </div>
+  <div class="page page-break page-2">
+    <h2>The second page</h2>
+  </div>
+</body>
+
+</html>

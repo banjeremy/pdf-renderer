@@ -1,42 +1,50 @@
 var phantom = require('phantom'),
-       path = require('path');
+    path = require('path');
 
-exports.render = function(o, cb){
-  var content    = o.content,
-      output     = o.output,
-      values     = o.values     || {},
-      width      = o.width      || 2550, //8.5 in * 300 dpi
-      height     = o.height     || 3300, //11 in * 300 dpi
-      paperSize  = o.paperSize  || { format: 'Letter', orientation: 'Landscape', margin: 0 }
-      quality    = o.quality    || 100,
-      zoomFactor = o.zoomFactor || 4.167,
-      format     = o.format     || 'png';
+exports.render = function(options, cb){
+const defaults = {
+  values: {},
+  width: 2550,  // 8.5 * 300dpi
+  height: 3300, // 11 * 300dpi
+  paperSize: { format: 'Letter', orientation: 'Portrait', margin: 0 },
+  quality: 100,
+  zoomFactor: 1,
+  format: 'pdf'
+};
 
-  phantom.create(function(ph){
-    ph.createPage(function(page){
-      page.set('localToRemoteUrlAccessEnabled', true, function(){
-        page.set('paperSize', paperSize, function(){
-          page.set('zoomFactor', zoomFactor, function(){
-            page.set('viewportSize', {
-              width: width,
-              height: height
-            }, function(){
-              page.setContent(content);
-              page.set('onResourceRequested', function(request) {
-                console.log('Request ' + JSON.stringify(request, undefined, 4));
-              });
-              page.set('onLoadFinished', function(){
-                page.render(output, {
-                  format: format,
-                  quality: quality
-                }, function(){
-                  ph.exit();
-                });
-              });
-            });
-          });
-        });
-      });
+const o = Object.assign({}, defaults, options);
+
+var _ph, _page;
+
+phantom.create()
+  .then(ph => {
+    _ph = ph;
+    return _ph.createPage();
+  })
+  .then(page => {
+    _page = page;
+  })
+  .then(() => _page.property('localToRemoteUrlAccessEnabled', true))
+  .then(() => _page.property('paperSize', o.paperSize))
+  .then(() => _page.property('zoomFactor', o.zoomFactor))
+  .then(() => _page.property('viewportSize', {
+    width: o.width,
+    height: o.height
+  }))
+  .then(() => _page.property('content', o.content))
+  .then(() => {
+    return _page.on('onLoadFinished', () => {
+      _page.render(
+        o.output, {
+          format: o.format,
+          quality: o.quality
+        }
+      );
+      _ph.exit();
     });
+  })
+  .catch((err) => {
+    console.log(err)
+    _ph.exit();
   });
 };

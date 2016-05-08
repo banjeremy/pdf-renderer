@@ -7,7 +7,8 @@ pdf rendering using node and phantomjs
 npm install
 ```
 
-## To Use:
+## Usage:
+
 ```bash
-node app.js templates/test.hbs data/test.json ./output/test.png
+node app.js templates/test.hbs data/test.json ./output/test.pdf
 ```

@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/banjeremy/pdf-renderer",
   "dependencies": {
-    "jade": "^1.9.2",
-    "phantomjs": "^1.9.16"
+    "handlebars": "^4.0.5",
+    "phantom": "^2.1.1"
   }
 }

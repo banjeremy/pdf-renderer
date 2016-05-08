@@ -1,5 +1,4 @@
 var renderer   = require('./renderer.js'),
-    jade = require('jade'),
     handlebars = require('handlebars'),
     fs         = require('fs');
 
